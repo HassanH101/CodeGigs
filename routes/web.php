@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('listings', ['heading' => 'Latest Listings']);
 });
 
-Route::get('/hello', function () {
-    return response("<h1>Hello World</h1>");
-});
