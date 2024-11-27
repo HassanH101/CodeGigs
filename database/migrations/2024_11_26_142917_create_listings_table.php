@@ -17,7 +17,10 @@ return new class extends Migration
         });
     }
 
-    
+
+
+
+    //Hello
     /**
      * Reverse the migrations.
      */
