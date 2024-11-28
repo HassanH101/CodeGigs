@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
+<<<<<<< Updated upstream
+=======
+            $table->string('title');
+            $table->string('tags');
+            $table->string('company');
+            $table->string('location');
+            $table->string('email');
+            $table->string('website');
+            $table->longText('description');
+>>>>>>> Stashed changes
             $table->timestamps();
         });
     }
@@ -20,8 +30,6 @@ return new class extends Migration
 
 
 
-    //Hello
-    //Me change
     /**
      * Reverse the migrations.
      */
