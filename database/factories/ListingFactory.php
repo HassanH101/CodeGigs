@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Listing;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
