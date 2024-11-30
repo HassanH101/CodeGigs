@@ -20,7 +20,11 @@ return new class extends Migration
             $table->string('email');
             $table->string('website');
             $table->longText('description');
+<<<<<<< Updated upstream
             $table->timestamps();
+=======
+
+>>>>>>> Stashed changes
         });
     }
 
