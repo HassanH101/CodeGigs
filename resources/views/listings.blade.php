@@ -1,3 +1,10 @@
+@extends('layout')
+
+
+@section('content')
+    
+@endsection
+
 <h1>{{$heading}}</h1>
 
 @if (count($listings) == 0)
@@ -13,3 +20,5 @@
         {{$listing['description']}}
     </p>
 @endforeach
+
+@endsection

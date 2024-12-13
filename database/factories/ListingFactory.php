@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Listing>
+ * @extends\Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Listing>
  */
 class ListingFactory extends Factory
 {
@@ -18,13 +18,12 @@ class ListingFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'tags' => 'laravel, api','backend',
+            'tags' => 'API, Backend, Frontend',
             'company' => $this->faker->company(),
-            'email' => $this->faker->companyEmail(),
-            'website' => $this->faker->url(),
             'location' => $this->faker->city(),
-            'company' => $this->faker->paragraph(5),
-
+            'email' => $this->faker->email(),
+            'website' => $this->faker->url(),
+            'description' => $this->faker->paragraph(5),
         ];
     }
 }
