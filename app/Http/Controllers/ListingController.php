@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ListingController extends Controller
 {
-    /**
-     * Display a listing of all listings.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         // Retrieve the latest listings, filtered by tag and search query
@@ -24,39 +19,21 @@ class ListingController extends Controller
         return view('listings.index', compact('listings'));
     }
 
-    /**
-     * Display a single listing.
-     *
-     * @param  \App\Models\Listing  $listing
-     * @return \Illuminate\View\View
-     */
+    // Return a view with the specified listing
     public function show(Listing $listing)
     {
-        // Return a view with the specified listing
         return view('listings.show', compact('listing'));
     }
-
-    /**
-     * Show the form for creating a new listing.
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
         // Return the create form view
         return view('listings.create');
     }
-
-    /**
-     * Store a newly created listing in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    //Store Listing
     public function store(Request $request)
     {
         // Validate the request data
-        $validatedData = $request->validate([
+        $formFields = $request->validate([
             'title' => 'required',
             'company' => ['required', Rule::unique('listings', 'company')],
             'location' => 'required',
@@ -66,42 +43,63 @@ class ListingController extends Controller
             'description' => 'required',
         ]);
 
-        // Check if the image is uploaded
-        if (!$request->hasFile('logo')) {
-            return response()->json(['error' => 'Logo is required'], 422);
+
+        if ($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        // Get the logo file name
-        $logoFileName = $request->file('logo')->getClientOriginalName();
+        $formFields['user_id'] = Auth::id();
 
-        // Check if the logo file name is null
-        if (!$logoFileName) {
-            return response()->json(['error' => 'Logo file name is required'], 422);
-        }
+        Listing::create($formFields);
 
-        // Store the logo file
-        $logoPath = $request->file('logo')->store('logos', 'public');
-
-        // Get the user ID
-        $userId = Auth::id();
-
-        // Check if the user is authenticated
-        if (!$userId) {
-            return response()->json(['error' => 'User is not authenticated'], 401);
-        }
-
-        // Create a new listing
-        $listing = Listing::create(array_merge($validatedData, [
-            'logo' => $logoPath,
-            'user_id' => $userId,
-        ]));
-
-        // Return a success response
-        return redirect()->with('message', 'Listing created successfully!');
+        return redirect('/')->with('message', 'Listing created successfully!');
     }
+    // Show Edit Form
+    public function edit(Listing $listing)
+    {
+        return view('listings.edit', ['listing' => $listing]);
+    }
+    //Update Listing
+    public function update(Request $request, Listing $listing)
+    {
+        // Make sure logged in user is owner
+        if ($listing->user_id != Auth::id()) {
+            abort(403, 'Unauthorized Action');
+        }
+
+        $formFields = $request->validate([
+            'title' => 'required',
+            'company' => ['required'],
+            'location' => 'required',
+            'website' => 'required',
+            'email' => ['required', 'email'],
+            'tags' => 'required',
+            'description' => 'required'
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        $listing->update($formFields);
+
+        return back()->with('message', 'Listing updated successfully!');
+    }
+    //Delete Listing
     public function destroy(Listing $listing)
     {
+        // Make sure logged in user is owner
+        if ($listing->user_id != Auth::id()) {
+            abort(403, 'Unauthorized Action');
+        }
         $listing->delete();
         return redirect('/')->with('message', 'Listing deleted successfully!');
+    }
+    public function manage()
+    {
+        $user = Auth::user();
+        $listings = $user->listings;
+
+        return view('listings.manage', ['listings' => $listings]);
     }
 }
