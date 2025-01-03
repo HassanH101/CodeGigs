@@ -62,41 +62,47 @@ class ListingController extends Controller
     //Update Listing
     public function update(Request $request, Listing $listing)
     {
-        // Make sure logged in user is owner
-        if ($listing->user_id != Auth::id()) {
+        if (Auth::user()->role == 'admin' || Auth::id() == $listing->user_id) {
+            $formFields = $request->validate([
+                'title' => 'required',
+                'company' => ['required'],
+                'location' => 'required',
+                'website' => 'required',
+                'email' => ['required', 'email'],
+                'tags' => 'required',
+                'description' => 'required'
+            ]);
+
+            if ($request->hasFile('logo')) {
+                $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+            }
+
+            $listing->update($formFields);
+
+            return back()->with('message', 'Listing updated successfully!');
+        } else {
+            // Make sure logged in user is owner
             abort(403, 'Unauthorized Action');
         }
-
-        $formFields = $request->validate([
-            'title' => 'required',
-            'company' => ['required'],
-            'location' => 'required',
-            'website' => 'required',
-            'email' => ['required', 'email'],
-            'tags' => 'required',
-            'description' => 'required'
-        ]);
-
-        if ($request->hasFile('logo')) {
-            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
-        }
-
-        $listing->update($formFields);
-
-        return back()->with('message', 'Listing updated successfully!');
     }
     //Delete Listing
     public function destroy(Listing $listing)
     {
+        if ($listing->user_id == Auth::id() || Auth::user()->role == 'admin') {
+            $listing->delete();
+            return redirect('/')->with('message', 'Listing deleted successfully!');
+        }
         // Make sure logged in user is owner
-        if ($listing->user_id != Auth::id()) {
+        else {
             abort(403, 'Unauthorized Action');
         }
-        $listing->delete();
-        return redirect('/')->with('message', 'Listing deleted successfully!');
     }
     public function manage()
     {
+        if (Auth::user()->role == 'admin') {
+            $listings = listing::all();
+            return view('listings.manage', ['listings' => $listings]);
+        }
         $user = Auth::user();
         $listings = $user->listings;
 
