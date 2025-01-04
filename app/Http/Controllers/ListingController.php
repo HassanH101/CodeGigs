@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\Models\Tag; // Import Tag model
+use App\Models\Tag; 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
-
+use App\Models\User;
 
 class ListingController extends Controller
 {
@@ -136,7 +136,7 @@ class ListingController extends Controller
         }
 
         $user = Auth::user();
-        $listings = $user->Auth::listings()->with('tags')->get();
+        $listings = User::find(Auth::id())->listings()->with('tags')->get();
 
         return view('listings.manage', compact('listings'));
     }

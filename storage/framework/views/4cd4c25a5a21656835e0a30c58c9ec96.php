@@ -4,7 +4,7 @@
 
     <div class="z-10">
         <h1 class="text-6xl font-bold uppercase text-white">
-            Code<span class="text-black">Gigs</span>
+            Job<span class="text-black">Junction</span>
         </h1>
         <p class="text-2xl text-gray-200 font-bold my-4">
             Find or post jobs & projects in Lebanon

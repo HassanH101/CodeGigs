@@ -34,7 +34,7 @@
             },
         };
     </script>
-    <title>CodeGigs | Find Jobs & Projects</title>
+    <title>JobJunction | Find Jobs & Projects</title>
 </head>
 
 <body class="mb-48">
