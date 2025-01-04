@@ -1,7 +1,7 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['tagsCsv']));
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['listingData']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -16,7 +16,7 @@ $attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
 unset($__propNames);
 unset($__newAttributes);
 
-foreach (array_filter((['tagsCsv']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+foreach (array_filter((['listingData']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 }
 
@@ -28,15 +28,11 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars); ?>
 
-<?php
-$tags = explode(',', $tagsCsv);
-?>
-
 <ul class="flex">
-    <?php $__currentLoopData = $tags; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php $__currentLoopData = explode(',', $listingData); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <li class="bg-black text-white rounded-xl px-3 py-1 mr-2">
-            <a href="/?tag=<?php echo e($tag); ?>"><?php echo e($tag); ?></a>
+            <?php echo e($tag); ?>
+
         </li>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-</ul>
-<?php /**PATH C:\Users\Acer\CodeGigz\CodeGigz\resources\views/components/listing-tags.blade.php ENDPATH**/ ?>
+</ul><?php /**PATH C:\Users\Acer\CodeGigz\CodeGigz\resources\views/components/listing-tags.blade.php ENDPATH**/ ?>

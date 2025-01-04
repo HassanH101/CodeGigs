@@ -18,7 +18,7 @@ description: This is the view for displaying a single job listing.
                 <!-- Job listing company -->
                 <div class="text-xl font-bold mb-4">{{ $listing->company }}</div>
                 <!-- Job listing tags -->
-                <x-listing-tags :tagsCsv='$listing->tags' />
+                <x-listing-tags :listingData="$listing->tags" />
                 <!-- Job listing location -->
                 <div class="text-lg my-4">
                     <i class="fa-solid fa-location-dot"></i> {{ $listing->location }}

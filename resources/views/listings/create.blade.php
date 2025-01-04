@@ -52,15 +52,30 @@
                 @enderror
             </div>
             <div class="mb-6">
-                <label for="tags" class="inline-block text-lg mb-2">
-                    Tags (Comma Separated)
-                </label>
-                <input type="text" class="border border-gray-200 rounded p-2 w-full" name="tags"
-                    placeholder="Example: Laravel, Backend, Postgres, etc" value="{{ old('tags') }}" />
-                @error('tags')
+                <label for="category" class="inline-block text-lg mb-2">Category:</label>
+                <select name="category_id" id="category" class="border border-gray-200 rounded p-2 w-full" required>
+                    <option value="" disabled selected>Select a category</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @if (old('category_id') == $category->id) selected @endif>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            <div>
+                <label for="tags" class="inline-block text-lg mb-2">Tags:</label>
+                <select name="tags[]" id="tags" class="border border-gray-200 rounded p-2 w-full" multiple>
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+                @error('tags')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div class="mb-6">
             <div class="mb-6">
                 <label for="logo" class="inline-block text-lg mb-2">
                     Company Logo

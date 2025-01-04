@@ -10,7 +10,7 @@ class Listing extends Model
     use HasFactory;
 
     // protected $fillable = ['title','company','location','website','email','description','tags'];
-   
+
     // Define a scope for filtering listings
     public function scopeFilter($query, array $filters)
     {
@@ -29,7 +29,18 @@ class Listing extends Model
         }
     }
     //Relationship with Users
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    // app/Models/Listing.php
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'listing_tags');
     }
 }

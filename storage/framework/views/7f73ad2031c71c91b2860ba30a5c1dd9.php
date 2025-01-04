@@ -105,12 +105,17 @@ endif;
 unset($__errorArgs, $__bag); ?>
             </div>
             <div class="mb-6">
-                <label for="tags" class="inline-block text-lg mb-2">
-                    Tags (Comma Separated)
-                </label>
-                <input type="text" class="border border-gray-200 rounded p-2 w-full" name="tags"
-                    placeholder="Example: Laravel, Backend, Postgres, etc" value="<?php echo e(old('tags')); ?>" />
-                <?php $__errorArgs = ['tags'];
+                <label for="category" class="inline-block text-lg mb-2">Category:</label>
+                <select name="category_id" id="category" class="border border-gray-200 rounded p-2 w-full" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($category->id); ?>" <?php if(old('category_id') == $category->id): ?> selected <?php endif; ?>>
+                            <?php echo e($category->name); ?>
+
+                        </option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+                <?php $__errorArgs = ['category_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -121,6 +126,24 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
             </div>
+            <div>
+                <label for="tags" class="inline-block text-lg mb-2">Tags:</label>
+                <select name="tags[]" id="tags" class="border border-gray-200 rounded p-2 w-full" multiple>
+                    <?php $__currentLoopData = $tags; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($tag->id); ?>"><?php echo e($tag->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+                <?php $__errorArgs = ['tags'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div class="mb-6">
             <div class="mb-6">
                 <label for="logo" class="inline-block text-lg mb-2">
                     Company Logo

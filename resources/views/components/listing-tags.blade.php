@@ -1,13 +1,9 @@
-@props(['tagsCsv'])
-
-@php
-$tags = explode(',', $tagsCsv);
-@endphp
+@props(['listingData'])
 
 <ul class="flex">
-    @foreach ($tags as $tag)
+    @foreach (explode(',', $listingData) as $tag)
         <li class="bg-black text-white rounded-xl px-3 py-1 mr-2">
-            <a href="/?tag={{$tag}}">{{$tag}}</a>
+            {{ $tag }}
         </li>
     @endforeach
 </ul>

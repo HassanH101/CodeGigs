@@ -52,12 +52,29 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            <div>
+                <label for="category">Category:</label>
+                <select name="category_id" id="category" required>
+                    <option value="" disabled selected>Select a category</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @if(old('category_id') == $category->id) selected @endif>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             <div class="mb-6">
-                <label for="tags" class="inline-block text-lg mb-2">
-                    Tags (Comma Separated)
-                </label>
-                <input type="text" class="border border-gray-200 rounded p-2 w-full" name="tags"
-                    placeholder="Example: Laravel, Backend, Postgres, etc" value="{{ $listing->tags }}" />
+                <label for="tags">Tags:</label>
+                <select name="tags[]" id="tags" multiple>
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->id }}" @if ($listing->tags->contains($tag->id)) selected @endif>
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('tags')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
