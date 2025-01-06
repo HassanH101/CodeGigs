@@ -2,7 +2,7 @@
     <x-card class="p-10 rounded max-w-lg mx-auto mt-24">
         <header class="text-center">
             <h2 class="text-2xl font-bold uppercase mb-1">
-                Edit Gig
+                Edit Listing
             </h2>
             <p class="mb-4">Edit: {{ $listing->title }}</p>
         </header>
@@ -52,12 +52,12 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-            <div>
-                <label for="category">Category:</label>
-                <select name="category_id" id="category" required>
+            <div class="mb-6">
+                <label for="category" class="inline-block text-lg mb-2">Category:</label>
+                <select name="category_id" class="border border-gray-200 rounded p-2 w-full" id="category" required>
                     <option value="" disabled selected>Select a category</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @if(old('category_id') == $category->id) selected @endif>
+                        <option value="{{ $category->id }}" @if ($category->id == $listing->category_id) selected @endif>
                             {{ $category->name }}
                         </option>
                     @endforeach
@@ -65,48 +65,47 @@
                 @error('category_id')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
-            </div>
-            <div class="mb-6">
-                <label for="tags">Tags:</label>
-                <select name="tags[]" id="tags" multiple>
-                    @foreach ($tags as $tag)
-                        <option value="{{ $tag->id }}" @if ($listing->tags->contains($tag->id)) selected @endif>
-                            {{ $tag->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('tags')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="mb-6">
-                <label for="logo" class="inline-block text-lg mb-2">
-                    Company Logo
-                </label>
-                <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
-                <img class="w-48 mr-6 mb-6"
-                    src="{{ $listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png') }}"
-                    alt="" />
-                @error('logo')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="mb-6">
-                <label for="description" class="inline-block text-lg mb-2">
-                    Job Description
-                </label>
-                <textarea class="border border-gray-200 rounded p-2 w-full" name="description" rows="10"
-                    placeholder="Include tasks, requirements, salary, etc">{{ $listing->description }}</textarea>
-                @error('description')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="mb-6">
-                <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
-                    Update Gig
-                </button>
-                <a href="/" class="text-black ml-4"> Back </a>
-            </div>
+                <div class="mb-6">
+                    <label for="tags" class="inline-block text-lg mb-2">Tags:</label>
+                    <select name="tags[]" class="border border-gray-200 rounded p-2 w-full" id="tags" multiple>
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}" @if (in_array($tag->id, explode(',', $listing->tags))) selected @endif>
+                                {{ $tag->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('tags')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="mb-6">
+                    <label for="logo" class="inline-block text-lg mb-2">
+                        Company Logo
+                    </label>
+                    <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
+                    <img class="w-48 mr-6 mb-6"
+                        src="{{ $listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png') }}"
+                        alt="" />
+                    @error('logo')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="mb-6">
+                    <label for="description" class="inline-block text-lg mb-2">
+                        Job Description
+                    </label>
+                    <textarea class="border border-gray-200 rounded p-2 w-full" name="description" rows="10"
+                        placeholder="Include tasks, requirements, salary, etc">{{ $listing->description }}</textarea>
+                    @error('description')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="mb-6">
+                    <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
+                        Update Gig
+                    </button>
+                    <a href="/" class="text-black ml-4"> Back </a>
+                </div>
         </form>
     </x-card>
 </x-layout>

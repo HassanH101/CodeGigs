@@ -6,7 +6,7 @@
             <p>No listings found</p>
         @endif
         @foreach ($listings as $listing)
-            <x-listing-card :listing="$listing" />
+            <x-listing-card :listing="$listing" :tagNames="$tagNames[$listing->id]" />
         @endforeach
     </div>
     <div class="mt-6 p-4">{{ $listings->links() }}</div>

@@ -29,9 +29,9 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars); ?>
 
 <ul class="flex">
-    <?php $__currentLoopData = explode(',', $listingData); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php $__currentLoopData = $listingData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <li class="bg-black text-white rounded-xl px-3 py-1 mr-2">
-            <?php echo e($tag); ?>
+            <?php echo e($tag->name); ?>
 
         </li>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

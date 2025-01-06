@@ -1,7 +1,7 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['listing']));
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['listing', 'tagNames']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -16,7 +16,7 @@ $attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
 unset($__propNames);
 unset($__newAttributes);
 
-foreach (array_filter((['listing']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+foreach (array_filter((['listing', 'tagNames']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 }
 
@@ -38,7 +38,9 @@ unset($__defined_vars); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
     <div class="flex">
-        <img class="hidden w-48 mr-6 md:block" src="<?php echo e($listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png')); ?>" alt="" />
+        <img class="hidden w-48 mr-6 md:block"
+            src="<?php echo e($listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png')); ?>"
+            alt="" />
         <div>
             <h3 class="text-2xl">
                 <a href="/listings/<?php echo e($listing->id); ?>"><?php echo e($listing->title); ?></a>
@@ -46,14 +48,14 @@ unset($__defined_vars); ?>
             <div class="text-xl font-bold mb-4"><?php echo e($listing->company); ?></div>
             <?php if (isset($component)) { $__componentOriginal56202f52dfd40daa6c756a0f1fd91cd3 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal56202f52dfd40daa6c756a0f1fd91cd3 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.listing-tags','data' => ['listingData' => $listing->tags]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.listing-tags','data' => ['listingData' => $tagNames]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('listing-tags'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['listingData' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listing->tags)]); ?>
+<?php $component->withAttributes(['listingData' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($tagNames)]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal56202f52dfd40daa6c756a0f1fd91cd3)): ?>

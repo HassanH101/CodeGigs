@@ -106,12 +106,17 @@ endif;
 unset($__errorArgs, $__bag); ?>
             </div>
             <div class="mb-6">
-                <label for="tags" class="inline-block text-lg mb-2">
-                    Tags (Comma Separated)
-                </label>
-                <input type="text" class="border border-gray-200 rounded p-2 w-full" name="tags"
-                    placeholder="Example: Laravel, Backend, Postgres, etc" value="<?php echo e($listing->tags); ?>" />
-                <?php $__errorArgs = ['tags'];
+                <label for="category" class="inline-block text-lg mb-2">Category:</label>
+                <select name="category_id" class="border border-gray-200 rounded p-2 w-full" id="category" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($category->id); ?>" <?php if($category->id == $listing->category_id): ?> selected <?php endif; ?>>
+                            <?php echo e($category->name); ?>
+
+                        </option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+                <?php $__errorArgs = ['category_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -121,49 +126,69 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-            </div>
-            <div class="mb-6">
-                <label for="logo" class="inline-block text-lg mb-2">
-                    Company Logo
-                </label>
-                <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
-                <img class="w-48 mr-6 mb-6"
-                    src="<?php echo e($listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png')); ?>"
-                    alt="" />
-                <?php $__errorArgs = ['logo'];
+                <div class="mb-6">
+                    <label for="tags" class="inline-block text-lg mb-2">Tags:</label>
+                    <select name="tags[]" class="border border-gray-200 rounded p-2 w-full" id="tags" multiple>
+                        <?php $__currentLoopData = $tags; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tag): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($tag->id); ?>" <?php if(in_array($tag->id, explode(',', $listing->tags))): ?> selected <?php endif; ?>>
+                                <?php echo e($tag->name); ?>
+
+                            </option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                    <?php $__errorArgs = ['tags'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                    <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
-                <?php unset($message);
+                        <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-            </div>
-            <div class="mb-6">
-                <label for="description" class="inline-block text-lg mb-2">
-                    Job Description
-                </label>
-                <textarea class="border border-gray-200 rounded p-2 w-full" name="description" rows="10"
-                    placeholder="Include tasks, requirements, salary, etc"><?php echo e($listing->description); ?></textarea>
-                <?php $__errorArgs = ['description'];
+                </div>
+                <div class="mb-6">
+                    <label for="logo" class="inline-block text-lg mb-2">
+                        Company Logo
+                    </label>
+                    <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
+                    <img class="w-48 mr-6 mb-6"
+                        src="<?php echo e($listing->logo ? asset('storage/' . $listing->logo) : asset('images/no-image.png')); ?>"
+                        alt="" />
+                    <?php $__errorArgs = ['logo'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                    <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
-                <?php unset($message);
+                        <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-            </div>
-            <div class="mb-6">
-                <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
-                    Update Gig
-                </button>
-                <a href="/" class="text-black ml-4"> Back </a>
-            </div>
+                </div>
+                <div class="mb-6">
+                    <label for="description" class="inline-block text-lg mb-2">
+                        Job Description
+                    </label>
+                    <textarea class="border border-gray-200 rounded p-2 w-full" name="description" rows="10"
+                        placeholder="Include tasks, requirements, salary, etc"><?php echo e($listing->description); ?></textarea>
+                    <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+                <div class="mb-6">
+                    <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
+                        Update Gig
+                    </button>
+                    <a href="/" class="text-black ml-4"> Back </a>
+                </div>
         </form>
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

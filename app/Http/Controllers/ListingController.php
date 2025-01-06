@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\Models\Tag; 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -12,104 +12,86 @@ use App\Models\User;
 
 class ListingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Retrieve the latest listings, filtered by tag and search query
-        $listings = Listing::latest()->filter(request(['tag', 'search']))->paginate(6);
+        $listings = Listing::latest()->paginate(6);
 
-        // Return a view with the filtered and paginated listings
-        return view('listings.index', compact('listings'));
+        $tagNames = []; // Create an empty array to store tag names
+
+        foreach ($listings as $listing) {
+            $listing->tags = $listing->tags; // Use the accessor method to convert the JSON string to an array of tag IDs
+            $tagNames[$listing->id] = $listing->tags; // Store the tag names in the array
+        }
+
+        return view('listings.index', compact('listings', 'tagNames')); // Pass the $tagNames array to the view
     }
 
     // Return a view with the specified listing
     public function show(Listing $listing)
     {
+        $listing->tags = $listing->tags; // Use the accessor method to convert the JSON string to an array of tag IDs
+
         return view('listings.show', compact('listing'));
     }
     // Store Listing
     public function store(Request $request)
     {
-        // Validate the request data
         $formFields = $request->validate([
             'title' => 'required',
             'company' => ['required', Rule::unique('listings', 'company')],
             'location' => 'required',
             'website' => 'required',
             'email' => ['required', 'email'],
-            'category_id' => ['required', 'exists:categories,id'], // Validate category_id
-            'tags' => 'array', // Ensure tags is an array
-            'tags.*' => ['exists:tags,id'], // Validate each tag ID exists
+            'tags' => 'required|array',
+            'category_id' => ['required', 'exists:categories,id'],
             'description' => 'required',
         ]);
-
-        // Retrieve the tag names based on the selected tag IDs
-        $tagNames = Tag::whereIn('id', $formFields['tags'])->pluck('name')->toArray();
-
-        // Convert tag names to string
-        $formFields['tags'] = implode(',', $tagNames);
 
         if ($request->hasFile('logo')) {
             $formFields['logo'] = $request->file('logo')->store('logos', 'public');
         }
-
         $formFields['user_id'] = Auth::id();
 
-        // Create the listing without tags first
-        $listing = Listing::create($formFields);
+        $formFields['tags'] = json_encode($request->input('tags'));
 
-        // Attach tags to the listing
-        if ($request->has('tags')) {
-            $listing->tags()->attach($request->tags);
+        $listing = Listing::create($formFields);
+        // Insert tags into listing_tags table
+        foreach ($request->input('tags') as $tagId) {
+            $listing->tags()->attach($tagId);
         }
 
         return redirect('/')->with('message', 'Listing created successfully!');
     }
+
+
     // Update Listing
     public function update(Request $request, Listing $listing)
     {
         if (Auth::user()->role == 'admin' || Auth::id() == $listing->user_id) {
             $formFields = $request->validate([
                 'title' => 'required',
-                'company' => ['required'],
+                'company' => 'required',
                 'location' => 'required',
                 'website' => 'required',
-                'email' => ['required', 'email'],
-                'category_id' => ['required', 'exists:categories,id'], // Validate category_id
-                'tags' => 'array',
-                'tags.*' => ['exists:tags,id'], // Validate tags
+                'email' => 'required|email',
+                'category_id' => 'required|exists:categories,id',
                 'description' => 'required',
+                'tags' => 'required|array',
+                'tags.*' => 'exists:tags,id',
             ]);
-
-            // Retrieve the tag names based on the selected tag IDs
-            $tagNames = Tag::whereIn('id', $formFields['tags'])->pluck('name')->toArray();
-
-            // Convert tag names to string
-            $formFields['tags'] = implode(',', $tagNames);
 
             if ($request->hasFile('logo')) {
                 $formFields['logo'] = $request->file('logo')->store('logos', 'public');
             }
 
-            // Update listing
-            $listing->fill($formFields);
+            $listing->update($formFields);
 
-            // Update category
-            $listing->category_id = $request->category_id;
-
-            // Remove existing tags
-            $listing->tags()->detach();
-
-            // Attach new tags
-            if ($request->has('tags')) {
-                $listing->tags()->sync($request->tags);
-            }
-
-            $listing->save();
+            // Sync tags with the listing
+            $listing->tags()->sync($request->input('tags'));
 
             return redirect('/')->with('message', 'Listing updated successfully!');
         } else {
-            // Make sure logged-in user is the owner
-            abort(403, 'Unauthorized Action');
+            abort(403, 'Unauthorized action.');
         }
     }
 
